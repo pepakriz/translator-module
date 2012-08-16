@@ -35,6 +35,10 @@ class TranslatorExtension extends CompilerExtension
 		$container = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
+		$container->addDefinition($this->prefix('extractor'))
+			->setClass('TranslatorModule\Extraction\Extractor')
+			->addSetup('$service->addFilter(?)', array(new \Nette\DI\Statement('TranslatorModule\Extraction\Filters\LatteFilter')));
+
 		$translator = $container->addDefinition($this->prefix('translator'))
 			->setClass('TranslatorModule\Translator')
 			->addSetup('setCache', array('@cacheStorage'));
@@ -43,6 +47,11 @@ class TranslatorExtension extends CompilerExtension
 		foreach($config['dictionaries'] as $dictionary) {
 			$translator->addSetup('$service->addDictionary(?)', array(new \Nette\DI\Statement('TranslatorModule\Dictionary', array($dictionary))));
 		}
+
+		// Commands
+		$container->addDefinition($this->prefix('extractCommand'))
+			->setClass('TranslatorModule\Commands\ExtractCommand')
+			->addTag('command');
 
 	}
 

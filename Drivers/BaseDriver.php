@@ -29,10 +29,16 @@ abstract class BaseDriver extends Object implements IDriver
 	public function __construct($file)
 	{
 		if (!file_exists($file)) {
-			throw new \Nette\InvalidArgumentException("File {$file} does not exists.");
+			if (!is_writable(dirname($file))) {
+				throw new \Nette\InvalidArgumentException("File {$file} does not exists.");
+			}
+			umask(0000);
+			@mkdir(dirname($file));
+			$this->file = $file;
+			$this->save(array());
+		} else {
+			$this->file = $file;
 		}
-
-		$this->file = $file;
 	}
 
 
@@ -41,7 +47,6 @@ abstract class BaseDriver extends Object implements IDriver
 	 */
 	public function save($data)
 	{
-
 	}
 
 
@@ -52,5 +57,4 @@ abstract class BaseDriver extends Object implements IDriver
 	{
 		return array();
 	}
-
 }
