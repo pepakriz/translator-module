@@ -1,0 +1,32 @@
+{
+	"name": "venne/translator-module",
+	"description": "Translator module",
+	"keywords": ["cms", "nette", "venne", "module"],
+	"type": "venne-module",
+	"authors": [
+		{
+			"name": "Josef Kříž",
+			"homepage": "http://josef-kriz.cz"
+		}
+	],
+	"require": {
+		"php" : ">=5.3.2",
+		"venne/framework" : "2.0.x-dev"
+	},
+	"autoload": {
+		"psr-0": { "TranslatorModule": "" }
+	},
+	"target-dir": "TranslatorModule",
+	"extra": {
+		"branch-alias": {
+			"dev-master": "2.0.x-dev"
+		},
+		"venne": {
+			"configuration": {
+				"extensions": {
+					"translator": "TranslatorModule\\DI\\TranslatorExtension"
+				}
+			}
+		}
+	}
+}
