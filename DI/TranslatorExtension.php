@@ -37,7 +37,8 @@ class TranslatorExtension extends CompilerExtension
 
 		$container->addDefinition($this->prefix('extractor'))
 			->setClass('TranslatorModule\Extraction\Extractor')
-			->addSetup('$service->addFilter(?)', array(new \Nette\DI\Statement('TranslatorModule\Extraction\Filters\LatteFilter')));
+			->addSetup('$service->addFilter(?)', array(new \Nette\DI\Statement('TranslatorModule\Extraction\Filters\LatteFilter')))
+			->addSetup('$service->addFilter(?)', array(new \Nette\DI\Statement('TranslatorModule\Extraction\Filters\PhpFilter')));
 
 		$translator = $container->addDefinition($this->prefix('translator'))
 			->setClass('TranslatorModule\Translator')

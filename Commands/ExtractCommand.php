@@ -91,6 +91,9 @@ class ExtractCommand extends Command
 		// Save
 		/** @var $driver \TranslatorModule\Drivers\IDriver */
 		$driver = new $class($file);
+		$origData = $driver->load();
+		$results = array_merge($results, $origData);
+		ksort($results);
 		$driver->save($results);
 
 		$output->writeln('Done');

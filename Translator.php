@@ -65,15 +65,16 @@ class Translator extends Object implements ITranslator
 	 */
 	public function translate($message, $count = NULL)
 	{
-		$uc = ctype_upper($message);
+		$lcMessage = lcfirst($message);
+		$uc = ctype_upper(substr($message, 0, 1));
 		$this->loadData();
 
-		if (isset($this->data[$message]) && $count === NULL) {
-			return $uc ? ucfirst($this->data[$message]) : $this->data[$message];
+		if (isset($this->data[$lcMessage]) && $count === NULL) {
+			return $uc ? ucfirst($this->data[$lcMessage]) : $this->data[$lcMessage];
 		}
 
-		if (isset($this->data[$message]) && $count !== NULL) {
-			return $uc ? ucfirst($this->data[$message][$count]) : $this->data[$message][$count];
+		if (isset($this->data[$lcMessage]) && $count !== NULL) {
+			return $uc ? ucfirst($this->data[$lcMessage][$count]) : $this->data[$lcMessage][$count];
 		}
 
 		return $message;

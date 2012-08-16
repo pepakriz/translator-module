@@ -31,7 +31,10 @@ class LatteFilter extends BaseFilter
 
 		$content = file_get_contents($file);
 
-		$ret = $this->matchBetween($content, "{_'", "'}");
+		$ret = array();
+		$ret = array_merge($this->matchBetween($content, "{_'", "'}"), $ret);
+		$ret = array_merge($this->matchBetween($content, '{_"', '"}'), $ret);
+		$ret = array_merge($this->matchBetween($content, '{_}', '{\/_}'), $ret);
 
 		return $ret;
 	}
