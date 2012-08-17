@@ -42,29 +42,6 @@ class Dictionary extends Object implements IDictionary
 
 
 	/**
-	 * Translates the given string.
-	 *
-	 * @param  string   message
-	 * @param  int      plural count
-	 * @return string
-	 */
-	public function translate($message, $count = NULL)
-	{
-		$this->loadData();
-
-		if (isset($this->data[$message]) && $count === NULL) {
-			return $this->data[$message];
-		}
-
-		if (isset($this->data[$message]) && $count !== NULL) {
-			return $this->data[$message][$count];
-		}
-
-		return $message;
-	}
-
-
-	/**
 	 * @param string $lang
 	 */
 	public function setLang($lang)
