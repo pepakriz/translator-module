@@ -12,8 +12,9 @@
 namespace TranslatorModule\DI;
 
 use Venne;
-use Venne\Config\CompilerExtension;
+use Nette\Config\CompilerExtension;
 use Nette\Application\Routers\Route;
+use Nette\Config\Configurator;
 
 /**
  * @author Josef Kříž <pepakriz@gmail.com>
@@ -24,6 +25,7 @@ class TranslatorExtension extends CompilerExtension
 	public $defaults = array(
 		'dictionaries' => array(),
 	);
+
 
 	/**
 	 * Processes configuration data. Intended to be overridden by descendant.
@@ -45,7 +47,7 @@ class TranslatorExtension extends CompilerExtension
 			->addSetup('setCache', array('@cacheStorage'));
 
 
-		foreach($config['dictionaries'] as $dictionary) {
+		foreach ($config['dictionaries'] as $dictionary) {
 			$translator->addSetup('$service->addDictionary(?)', array(new \Nette\DI\Statement('TranslatorModule\Dictionary', array($dictionary))));
 		}
 
@@ -53,7 +55,21 @@ class TranslatorExtension extends CompilerExtension
 		$container->addDefinition($this->prefix('extractCommand'))
 			->setClass('TranslatorModule\Commands\ExtractCommand')
 			->addTag('command');
-
 	}
 
+
+	/**
+	 * Register extension to compiler.
+	 *
+	 * @param \Nette\Config\Configurator
+	 * @param string
+	 */
+	public static function register(Configurator $configurator, $name = 'translator')
+	{
+		$class = get_called_class();
+		$configurator->onCompile[] = function(Configurator $configurator, \Nette\Config\Compiler $compiler) use($class, $name)
+		{
+			$compiler->addExtension($name, new $class);
+		};
+	}
 }

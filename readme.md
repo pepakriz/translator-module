@@ -1,9 +1,47 @@
-TranslatorModule module for Venne:CMS
-=====================================
+# TranslatorModule module for Venne:Framework and Nette Framework
 
-This module is official extension for Venne:CMS. Thank you for your interest.
+## Installation in Nette
 
-Installation
-------------
+run:
 
-- Active this module in administration
+	php composer.phar require venne/translator-module:2.0.x
+
+add to bootstrap.php
+
+	TranslatorModule\DI\TranslatorExtension::register($configurator);
+
+## Installation in Venne
+
+run only:
+
+	php composer.phar require venne/translator-module:2.0.x
+
+## Use
+
+### Configuration
+
+add to `config.neon` new directories. For example:
+
+	translator:
+		dictionaries:
+			- %modules.cms.path%/Resources/translations
+			- %modules.blog.path%/Resources/translations
+
+### Dictionary
+
+Dictionary is folder with translation files. File format must be `<name>.<lang>.<driver>`.
+
+#### Examples
+- admin.cs.latte
+- blog.pl.php
+- eshop.de.ini
+
+## Extraction of strings
+
+command:
+
+	php www/index.php venne:translator:extract vendor/venne/cms-module/
+
+save into file:
+
+	php www/index.php venne:translator:extract vendor/venne/cms-module/ vendor/venne/cms-module/CmsModule/Resources/translations/test.cs.neon
