@@ -41,7 +41,7 @@ class TranslatorExtension extends CompilerExtension
 			->addSetup('$service->addFilter(?)', array(new \Nette\DI\Statement('TranslatorModule\Extraction\Filters\PhpFilter')));
 
 		$translator = $container->addDefinition($this->prefix('translator'))
-			->setClass('TranslatorModule\Translator')
+			->setClass('TranslatorModule\Translator', array('%productionMode%'))
 			->addSetup('setCache', array('@cacheStorage'));
 
 

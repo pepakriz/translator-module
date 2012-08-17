@@ -35,4 +35,10 @@ interface IDictionary
 	 * @return array
 	 */
 	public function getData();
+
+
+	/**
+	 * @return array
+	 */
+	public function getFiles();
 }

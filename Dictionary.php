@@ -14,7 +14,7 @@ namespace TranslatorModule;
 use Venne;
 use Nette\Object;
 use Nette\Utils\Finder;
-use TranslatorModule\Dictionaries\Drivers\IDriver;
+use TranslatorModule\Drivers\IDriver;
 
 /**
  * @author Josef Kříž <pepakriz@gmail.com>
@@ -43,6 +43,7 @@ class Dictionary extends Object implements IDictionary
 
 	/**
 	 * Translates the given string.
+	 *
 	 * @param  string   message
 	 * @param  int      plural count
 	 * @return string
@@ -73,20 +74,15 @@ class Dictionary extends Object implements IDictionary
 
 
 	/**
-	 * Load data from files.
+	 * Get data from files.
 	 *
 	 * @return array
 	 */
 	public function getData()
 	{
-		if (!file_exists($this->path)) {
-			throw new \Nette\InvalidArgumentException("Path '{$this->path}' does not exists.");
-		}
-
 		$data = array();
 
-		foreach (Finder::findFiles("*.{$this->lang}.*")->in($this->path) as $file) {
-			$file = $file->getPathname();
+		foreach ($this->getFiles() as $file) {
 			$ex = explode('.', $file);
 
 			$class = "\\TranslatorModule\\Drivers\\" . ucfirst($ex[2]) . "Driver";
@@ -97,5 +93,27 @@ class Dictionary extends Object implements IDictionary
 		}
 
 		return $data;
+	}
+
+
+	/**
+	 * Get files with translations.
+	 *
+	 * @return array
+	 * @throws \Nette\InvalidArgumentException
+	 */
+	public function getFiles()
+	{
+		if (!file_exists($this->path)) {
+			throw new \Nette\InvalidArgumentException("Path '{$this->path}' does not exists.");
+		}
+
+		$files = array();
+
+		foreach (Finder::findFiles("*.{$this->lang}.*")->in($this->path) as $file) {
+			$files[] = $file->getPathname();
+		}
+
+		return $files;
 	}
 }

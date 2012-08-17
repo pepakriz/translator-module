@@ -1,5 +1,0 @@
-services:
-
-includes:
-	- presenters.neon
-	- components.neon

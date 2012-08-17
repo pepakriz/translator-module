@@ -24,6 +24,10 @@ use TranslatorModule\Drivers\IDriver;
 class Translator extends Object implements ITranslator
 {
 
+	const DEVELOPMENT = FALSE;
+
+	const PRODUCTION = TRUE;
+
 	/** @var string */
 	protected $lang;
 
@@ -35,6 +39,18 @@ class Translator extends Object implements ITranslator
 
 	/** @var array */
 	protected $data;
+
+	/** @var bool */
+	protected $mode;
+
+
+	/**
+	 * @param $mode
+	 */
+	public function __construct($mode = TRUE)
+	{
+		$this->mode = $mode;
+	}
 
 
 	/**
@@ -111,9 +127,9 @@ class Translator extends Object implements ITranslator
 	{
 		if ($this->data === NULL) {
 			if ($this->cache) {
-				if (($this->data = $this->cache->load($this->lang)) === NULL) {
+				if (($this->data = $this->loadFromCache()) === NULL) {
 					$this->data = $this->getData();
-					$this->cache->save($this->lang, $this->data);
+					$this->saveToCache();
 				}
 			} else {
 				$this->data = $this->getData();
@@ -130,11 +146,61 @@ class Translator extends Object implements ITranslator
 	protected function getData()
 	{
 		$data = array();
-
 		foreach ($this->dictionaries as $item) {
 			$data = $data + $item->getData();
 		}
-
 		return $data;
+	}
+
+
+	/**
+	 * Get files from dictionaries.
+	 *
+	 * @return array
+	 */
+	protected function getFiles()
+	{
+		$files = array();
+		foreach ($this->dictionaries as $item) {
+			$files = array_merge($item->getFiles(), $files);
+		}
+		return $files;
+	}
+
+
+	/**
+	 * Save data to cache.
+	 */
+	protected function saveToCache()
+	{
+		if ($this->mode == self::DEVELOPMENT) {
+			$files = $this->getFiles();
+			sort($files);
+
+			$cacheKey = array($this->mode, $files, $this->lang);
+			$this->cache->save($cacheKey, $this->data, array(
+				Cache::FILES => $files,
+			));
+		} else {
+			$this->cache->save($this->lang, $this->data);
+		}
+	}
+
+
+	/**
+	 * Load data from cache.
+	 *
+	 * @return array|NULL
+	 */
+	protected function loadFromCache()
+	{
+		if ($this->mode == self::DEVELOPMENT) {
+			$files = $this->getFiles();
+			sort($files);
+
+			$cacheKey = array($this->mode, $files, $this->lang);
+			return $this->cache->load($cacheKey);
+		}
+		return $this->cache->load($this->lang);
 	}
 }
