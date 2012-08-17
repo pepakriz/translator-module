@@ -16,7 +16,7 @@ run only:
 
 	php composer.phar require venne/translator-module:2.0.x
 
-## Use
+## How to use
 
 ### Configuration
 

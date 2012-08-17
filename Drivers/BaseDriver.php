@@ -20,6 +20,7 @@ use Nette\Object;
 abstract class BaseDriver extends Object implements IDriver
 {
 
+	/** @var string */
 	protected $file;
 
 
@@ -30,7 +31,7 @@ abstract class BaseDriver extends Object implements IDriver
 	{
 		if (!file_exists($file)) {
 			if (!is_writable(dirname($file))) {
-				throw new \Nette\InvalidArgumentException("File {$file} does not exists.");
+				throw new \Nette\InvalidArgumentException("File {$file} is not writable.");
 			}
 			umask(0000);
 			@mkdir(dirname($file));
